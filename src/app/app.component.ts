@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ToWords } from 'to-words';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { DatePipe, formatDate } from '@angular/common';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 class Product{
@@ -44,13 +45,15 @@ export class AppComponent {
     name : 'RESHMI TRADERS',
     bank: 'RESHMI TRADERS \n TMB -A/c : 298150050800132 \n  Harur Branch \n IFC Code - TMBL0000298',
     address: 'MOOKKANURPATTI (VILL), Sandapatti-PO, Harur- TK, Dharmapuri-DT, Tamil Nadu',
-    gst: '33BKVPS8439K1Z5'
+    gst: '33BKVPS8439K1Z5',
+    phone: '94458 37788'
   };
   arsDetails = {
     name : 'ARS TRADERS',
     bank: 'ARS TRADERS \n ICICI Bank -A/c : 283705500131 \n  Harur Branch \n IFC Code - ICIC0002837',
     address: 'GOBINATHAMPATTI KOOTU ROAD, Parayapatti Pudur - PO, Pappireddipatti - TK, Dharmapuri-DT, Tamil Nadu, PIN:636903',
-    gst: '33AZUPA2010M1ZK'
+    gst: '33AZUPA2010M1ZK',
+    phone: '94428 09199'
   };
   totalVal;
   name;
@@ -58,6 +61,7 @@ export class AppComponent {
   address;
   gst;
   qr : any;
+  phone;
 
   lorryNumber = [
     {id:0, number: "TN 29 BS 2288"},
@@ -82,8 +86,8 @@ export class AppComponent {
               { text: 'TAX INVOICE CASH / CREDIT', alignment: 'center', fontSize: 9}
             ],
             [
-              { text: `Mobile: 94434 53798`, alignment: 'right', fontSize: 9},
-              { text: `E-mail: southri@gmail.com`, alignment: 'right', fontSize: 9}
+              { text: `Mobile: ${this.phone}`, alignment: 'right', fontSize: 9},
+              { text: `E-mail: southri3388@gmail.com`, alignment: 'right', fontSize: 9}
             ]
           ],
           margin: [0, 15 ,0, 15]
@@ -102,9 +106,9 @@ export class AppComponent {
         {
           alignment: 'justify',
           columns: [
-            [ { text: `Invoice No : ${this.invoice.number}`, alignment: 'left', fontSize: 10 } ],
-            [ { text: 'State: TamilNadu, State Code: 33', alignment: 'center', fontSize: 10 } ],
-            [ { text: `Date: ${this.invoice.date}`, alignment: 'right', fontSize: 10} ]
+            [ { text: `Invoice No : ${this.invoice.number}`, alignment: 'left', fontSize: 11} ],
+            [ { text: 'State: TamilNadu, State Code: 33', alignment: 'center', fontSize: 11 } ],
+            [ { text: `Date: ${this.formattedDate()}`, alignment: 'right', fontSize: 11} ]
           ],
           margin: [0, 5 ,0, 5]
         },
@@ -129,23 +133,15 @@ export class AppComponent {
             headerRows: 1,
             widths: ['*', 'auto', 'auto', 'auto', 'auto'],
             body: [
-              ['Paticulars', 'HSN Code', 'Qty (Sq.Mtr)', 'Rate (Per.Sq.Mtr)', 'Amount'],
+              [{alignment: 'center', text: 'Paticulars'}, {alignment: 'center', text: 'HSN Code'}, {alignment: 'center', text: 'Qty (Sq.Mtr)'}, {alignment: 'center', text: 'Rate (Per.Sq.Mtr)'}, {alignment: 'center', text: 'Amount'}],
               ...this.invoice.products.map(p => ([p.name, p.hsnCode, p.qty, p.price, (p.price*p.qty).toFixed(2)])),
-              [{colSpan:5, text: '_'},'','','',''],
+              [{colSpan:5, text: '.'},'','','',''],
               [{rowSpan: 3, colSpan: 3, text: `Bank Detail: ${this.bank}` } ,'','','Taxable Value', this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2)],
               ['','','', 'SGST @ 9%', this.calcualteGST(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))],
               ['','','', 'CGST @ 9%', this.calcualteGST(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))],
-              // [{colSpan: 3, text: this.numberToWords(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))},'','', 'Grand Total', this.totalValue(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))],
-              [{
-                  colSpan: 3,
-                  type: 'none',
-                  text: [
-                    'Rupees in Words :  \n ',
-                    this.numberToWords(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2)),
-                    '\n Transport Mode : BY ROAD,               Place of Supply : SAME',
-                  ],
-                },'','', 'Grand Total', this.totalValue(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))
-              ],
+              [{colSpan: 3,border: [true, true, true, false],  text: 'Rupees in Words : '},'','', {border: [true, true, true, false], text:''} , {border: [true, true, true, false], text:''}],
+              [{colSpan: 3,border: [true, false, true, true], italics: true, text: this.numberToWords(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2)),},'','', {border: [true, false, true, false], text:'Grand Total'} , {border: [true, false, true, false], text:this.totalValue(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))}],
+              [{colSpan: 3,border: [true, true, true, true], text: 'Transport Mode : BY ROAD      |        Place of Supply : SAME'},'','', {border: [true, false, true, true], text:''} , {border: [true, false, true, true], text:''}]
 
             ]
           }
@@ -172,7 +168,7 @@ export class AppComponent {
             type: 'none',
             fontSize: 12,
             ul: [
-              'Goods once sold cannot be taken back our reesponsibility ceases wehn goads leave',
+              'Goods once sold cannot be taken back our reesponsibility ceases when goads leave',
               'from our place. We are not / responsible for damage, pilferage during transit.',
               'Goods return will be made within 10 dys from the date of purchase',
               'E & O.E.'
@@ -210,7 +206,6 @@ export class AppComponent {
   numberToWords(value){
     value = this.totalValue(value);
     const toWords = new ToWords();
-    console.log(toWords.convert(value, {currency: true}));
     return toWords.convert(value, {currency: true});
   }
 
@@ -226,12 +221,18 @@ export class AppComponent {
       this.address = this.rashmiDetails.address;
       this.gst = this.rashmiDetails.gst;
       this.bank = this.rashmiDetails.bank;
+      this.phone = this.rashmiDetails.phone;
     } else {
       this.name = this.arsDetails.name;
       this.address = this.arsDetails.address;
       this.gst = this.arsDetails.gst;
       this.bank = this.arsDetails.bank;
+      this.phone = this.arsDetails.phone;
     }
+  }
+
+  formattedDate(){
+    return formatDate(this.invoice.date, 'dd-MM-yyyy', 'en-Us');
   }
 
 }

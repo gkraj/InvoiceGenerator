@@ -1,18 +1,19 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-info d-flex justify-content-center">
-  <a class="navbar-brand " href="#" >Invoice Generator</a>
-</nav>
 <form #invoiceForm="ngForm">
-  <div class="container-fluid pt-2 mb-5">
+  <div class="container-fluid pt-3 mb-5">
     <div class="row">
       <div class="col">
-        <div class="card border-secondary">
+        <div class="">
+            <h4 class="text-center p-3 mb-2 bg-success text-white font-weight-normal">Invoice Generator</h4>
+        </div>
+        <div class="card border border-success mt-2">
           <div class="card-body">
-            <h4 class="card-title">Bill Details</h4>
+            <h4 class="card-title ">Bill Details</h4>
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="name">Company</label>
-                  <select class="custom-select" [(ngModel)]="invoice.company" name="company" (change)="companySelect()">
+                  <select class="custom-select" [(ngModel)]="invoice.company" name="company" (change)="companySelect()"
+                  [ngClass]="{'is-invalid': invoiceForm.submitted && Company.invalid}" #Company="ngModel" required>
                     <option *ngFor="let company of companyName">{{company.name}}</option>
                   </select>
                 </div>
@@ -28,15 +29,17 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="date">Date</label>
-                  <input type="date" class="form-control" name="date" id="date" [(ngModel)]="invoice.date">
+                  <input type="date" class="form-control" name="date" id="date"
+                  [(ngModel)]="invoice.date" (change)="formattedDate()" placeholder="dd-mm-yyyy"
+                  [ngClass]="{'is-invalid': invoiceForm.submitted && Date.invalid}" #Date="ngModel" required>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="card border-secondary mt-2">
+        <div class="card border border-success mt-2">
           <div class="card-body">
-            <h4 class="card-title">Customer Details</h4>
+            <h4 class="card-title ">Customer Details</h4>
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
@@ -54,12 +57,15 @@
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="email">Party GSTIN</label>
-                  <input type="email" class="form-control" name="partyGstin" id="partyGstin" [(ngModel)]="invoice.partyGstin" required>
+                  <label for="text">Party GSTIN</label>
+                  <input type="text" class="form-control" name="partyGstin" id="partyGstin"
+                      [ngClass]="{'is-invalid': invoiceForm.submitted && PartyGstin.invalid}"
+                      [(ngModel)]="invoice.partyGstin" #PartyGstin="ngModel" required>
                 </div>
                 <div class="form-group">
                   <label for="vehicleNumber">Vehicle Number</label>
-                  <select class="custom-select" [(ngModel)]="invoice.vehicleNumber" name="vehicleNumber" id="vehicleNumber" #VehicleNumber="ngModel" >
+                  <select class="custom-select" [(ngModel)]="invoice.vehicleNumber" name="vehicleNumber" id="vehicleNumber"
+                  [ngClass]="{'is-invalid': invoiceForm.submitted && VehicleNumber.invalid}" #VehicleNumber="ngModel" required>
                     <option *ngFor="let number of lorryNumber">{{number.number}}</option>
                   </select>
                 </div>
@@ -69,19 +75,23 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="state">State</label>
-                      <input type="state" class="form-control" name="state" id="state" [(ngModel)]="invoice.state" required>
+                      <input type="text" class="form-control" name="state" id="state"
+                      [ngClass]="{'is-invalid': invoiceForm.submitted && State.invalid}"
+                      [(ngModel)]="invoice.state" #State="ngModel" required>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="stateCode">State Code</label>
-                      <input type="stateCode" class="form-control" name="stateCode" id="stateCode" [(ngModel)]="invoice.stateCode" required>
+                      <input type="text" class="form-control" name="stateCode" id="stateCode"
+                      [ngClass]="{'is-invalid': invoiceForm.submitted && StateCode.invalid}"
+                      [(ngModel)]="invoice.stateCode" #StateCode="ngModel" required>
                     </div>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="ewayBill">Eway Bill No</label>
-                  <input type="number" class="form-control" name="ewayBill" id="ewayBill"
+                  <input type="text" class="form-control" name="ewayBill" id="ewayBill"
                     [ngClass]="{'is-invalid': invoiceForm.submitted && EwayBill.invalid}"
                     [(ngModel)]="invoice.ewayBill" #EwayBill="ngModel" required>
                 </div>
@@ -89,19 +99,19 @@
             </div>
           </div>
         </div>
-        <div class="card border-secondary mt-2">
+        <div class="card border-success mt-2">
           <div class="card-body">
-            <h4 class="card-title d-flex justify-content-between">Order Details <button type="button"
+            <h4 class="card-title d-flex justify-content-between ">Order Details <button type="button"
                 class="btn btn-secondary" (click)="addProduct()">+</button></h4>
             <div class="row">
               <table class="table">
                 <thead>
                   <tr>
-                    <th width="25%">Product</th>
-                    <th width="10%">HSN Code</th>
-                    <th width="10%">Quantity</th>
-                    <th width="10%">Rate (Per.Sq.Mtr)</th>
-                    <th width="10%">Amount</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">HSN Code</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Rate (Per.Sq.Mtr)</th>
+                    <th scope="col">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -140,26 +150,19 @@
     <div class="row mt-2">
       <hr>
       <div class="col-md-4">
-        <button type="button" class="btn btn-info btn-lg btn-block"
+        <button type="button" class="btn btn-outline-success btn-lg btn-block my-2 my-sm-0"
           (click)="invoiceForm.valid ? generatePDF('download') : ''">Download Invoice</button>
       </div>
       <div class="col-md-4">
-        <button type="button" class="btn btn-info btn-lg btn-block"
+        <button type="button" class="btn btn-outline-success btn-lg btn-block my-2 my-sm-0"
           (click)="invoiceForm.valid ? generatePDF('print') : ''">Print
           Invoice</button>
       </div>
       <div class="col-md-4">
-        <button type="submit" class="btn btn-info btn-lg btn-block"
+        <button type="submit" class="btn btn-outline-success btn-lg btn-block my-2 my-sm-0"
           (click)="invoiceForm.valid ? generatePDF() : ''">Open
           Invoice</button>
       </div>
     </div>
   </div>
 </form>
-<footer class="fixed-bottom">
-  <div class="bg-light text-center p-2">
-    <h6>Made by
-      <a>gk</a>.
-    </h6>
-  </div>
-</footer>
