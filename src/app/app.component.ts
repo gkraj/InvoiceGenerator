@@ -69,14 +69,6 @@ export class AppComponent {
     {id:1, name: 'ARS Traders'}
   ]
 
-  ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.qr = [];
-
-  }
-
-
   generatePDF(action = 'open') {
     let docDefinition = {
       content: [
@@ -240,10 +232,6 @@ export class AppComponent {
       this.gst = this.arsDetails.gst;
       this.bank = this.arsDetails.bank;
     }
-  }
-
-  qrFnt(){
-    this.qr.push(this.name, this.invoice.customerName, this.invoice.address, this.invoice.products, this.totalVal);
   }
 
 }
