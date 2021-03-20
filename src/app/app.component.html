@@ -1,0 +1,174 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-info d-flex justify-content-center">
+  <a class="navbar-brand " href="#" >Invoice Generator</a>
+</nav>
+<form #invoiceForm="ngForm">
+  <div class="container-fluid pt-2 mb-5">
+    <div class="row">
+      <div class="col">
+        <div class="card border-secondary">
+          <div class="card-body">
+            <h4 class="card-title">Bill Details</h4>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="name">Company</label>
+                  <select class="custom-select" [(ngModel)]="invoice.company" name="company" (change)="companySelect()">
+                    <option *ngFor="let company of companyName">{{company.name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="name">Invoice Number</label>
+                  <input type="text" class="form-control" name="number" id="number"
+                    [ngClass]="{'is-invalid': invoiceForm.submitted && Number.invalid}"
+                    [(ngModel)]="invoice.number" #Number="ngModel" required>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="date">Date</label>
+                  <input type="date" class="form-control" name="date" id="date" [(ngModel)]="invoice.date">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card border-secondary mt-2">
+          <div class="card-body">
+            <h4 class="card-title">Customer Details</h4>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" name="name" id="name"
+                    [ngClass]="{'is-invalid': invoiceForm.submitted && CustName.invalid}"
+                    [(ngModel)]="invoice.customerName" #CustName="ngModel" required>
+                </div>
+                <div class="form-group">
+                  <label for="address">Address</label>
+                  <textarea class="form-control" name="address" id="address" row="3"
+                    [ngClass]="{'is-invalid': invoiceForm.submitted && Address.invalid}" [(ngModel)]="invoice.address"
+                    #Address="ngModel" required></textarea>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="email">Party GSTIN</label>
+                  <input type="email" class="form-control" name="partyGstin" id="partyGstin" [(ngModel)]="invoice.partyGstin" required>
+                </div>
+                <div class="form-group">
+                  <label for="vehicleNumber">Vehicle Number</label>
+                  <select class="custom-select" [(ngModel)]="invoice.vehicleNumber" name="vehicleNumber" id="vehicleNumber" #VehicleNumber="ngModel" >
+                    <option *ngFor="let number of lorryNumber">{{number.number}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="state">State</label>
+                      <input type="state" class="form-control" name="state" id="state" [(ngModel)]="invoice.state" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="stateCode">State Code</label>
+                      <input type="stateCode" class="form-control" name="stateCode" id="stateCode" [(ngModel)]="invoice.stateCode" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="ewayBill">Eway Bill No</label>
+                  <input type="number" class="form-control" name="ewayBill" id="ewayBill"
+                    [ngClass]="{'is-invalid': invoiceForm.submitted && EwayBill.invalid}"
+                    [(ngModel)]="invoice.ewayBill" #EwayBill="ngModel" required>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card border-secondary mt-2">
+          <div class="card-body">
+            <h4 class="card-title d-flex justify-content-between">Order Details <button type="button"
+                class="btn btn-secondary" (click)="addProduct()">+</button></h4>
+            <div class="row">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th width="25%">Product</th>
+                    <th width="10%">HSN Code</th>
+                    <th width="10%">Quantity</th>
+                    <th width="10%">Rate (Per.Sq.Mtr)</th>
+                    <th width="10%">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let product of invoice.products; let i=index">
+                    <td scope="row">
+                      <input type="text" class="form-control" name="productName{{i}}"
+                        [ngClass]="{'is-invalid': invoiceForm.submitted && ProductName.invalid}" id="productName"
+                        [(ngModel)]="product.name" #ProductName="ngModel" required>
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" name="price{{i}}" id="hsnCode"
+                        [ngClass]="{'is-invalid': invoiceForm.submitted && ProductHsnCode.invalid}"
+                        [(ngModel)]="product.hsnCode" #ProductHsnCode="ngModel" required>
+                    </td>
+                    <td>
+                      <input type="number" class="form-control" name="price{{i}}" id="price"
+                        [ngClass]="{'is-invalid': invoiceForm.submitted && ProductPrice.invalid}"
+                        [(ngModel)]="product.price" #ProductPrice="ngModel" required>
+                    </td>
+                    <td>
+                      <input type="number" class="form-control" name="quantity{{i}}" id="quantity"
+                        [ngClass]="{'is-invalid': invoiceForm.submitted && ProductQty.invalid}"
+                        [(ngModel)]="product.qty" #ProductQty="ngModel" required>
+                    </td>
+                    <td>
+                      {{product.price * product.qty || ''}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="card border-secondary mt-2">
+          <div class="card-body">
+            <h4 class="card-title">Additional Details</h4>
+            <div class="form-group">
+              <textarea class="form-control" name="additionalDetails" rows="3"
+                [(ngModel)]="invoice.additionalDetails"></textarea>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <div class="row mt-2">
+      <hr>
+      <div class="col-md-4">
+        <button type="button" class="btn btn-info btn-lg btn-block"
+          (click)="invoiceForm.valid ? generatePDF('download') : ''">Download Invoice</button>
+      </div>
+      <div class="col-md-4">
+        <button type="button" class="btn btn-info btn-lg btn-block"
+          (click)="invoiceForm.valid ? generatePDF('print') : ''">Print
+          Invoice</button>
+      </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-info btn-lg btn-block"
+          (click)="invoiceForm.valid ? generatePDF() : ''">Open
+          Invoice</button>
+      </div>
+    </div>
+  </div>
+</form>
+<!-- <footer class="fixed-bottom">
+  <div class="bg-light text-center p-2">
+    <h6>Made by
+      <a>Dexterous Corp</a>.
+    </h6>
+  </div>
+</footer> -->
