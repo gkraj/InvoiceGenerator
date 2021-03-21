@@ -92,8 +92,7 @@
                 <div class="form-group">
                   <label for="ewayBill">Eway Bill No</label>
                   <input type="text" class="form-control" name="ewayBill" id="ewayBill"
-                    [ngClass]="{'is-invalid': invoiceForm.submitted && EwayBill.invalid}"
-                    [(ngModel)]="invoice.ewayBill" #EwayBill="ngModel" required>
+                    [(ngModel)]="invoice.ewayBill" #EwayBill="ngModel">
                 </div>
               </div>
             </div>

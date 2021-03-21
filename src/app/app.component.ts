@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { ToWords } from 'to-words';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { DatePipe, formatDate } from '@angular/common';
+import { formatDate } from '@angular/common';
+import { formatAmount } from 'indian-currency-formatter'
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 class Product{
@@ -21,7 +23,7 @@ class Invoice{
   partyGstin: any;
   state: string;
   stateCode: number;
-  ewayBill: any;
+  ewayBill: any = '';
   vehicleNumber: any;
   company: any;
 
@@ -43,7 +45,7 @@ export class AppComponent {
   invoice = new Invoice();
   rashmiDetails = {
     name : 'RESHMI TRADERS',
-    bank: 'RESHMI TRADERS \n TMB -A/c : 298150050800132 \n  Harur Branch \n IFC Code - TMBL0000298',
+    bank: 'RESHMI TRADERS \n ICICI -A/c : 283705500127 \n  Harur Branch \n IFC Code - ICIC0002837',
     address: 'MOOKKANURPATTI (VILL), Sandapatti-PO, Harur- TK, Dharmapuri-DT, Tamil Nadu',
     gst: '33BKVPS8439K1Z5',
     phone: '94458 37788'
@@ -140,7 +142,8 @@ export class AppComponent {
               ['','','', 'SGST @ 9%', this.calcualteGST(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))],
               ['','','', 'CGST @ 9%', this.calcualteGST(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))],
               [{colSpan: 3,border: [true, true, true, false],  text: 'Rupees in Words : '},'','', {border: [true, true, true, false], text:''} , {border: [true, true, true, false], text:''}],
-              [{colSpan: 3,border: [true, false, true, true], italics: true, text: this.numberToWords(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2)),},'','', {border: [true, false, true, false], text:'Grand Total'} , {border: [true, false, true, false], text:this.totalValue(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))}],
+              [{colSpan: 3,border: [true, false, true, true], italics: true, text: this.numberToWords(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2)),},'','', {border: [true, false, true, false], bold: true, text:'Grand Total', fontSize:14} ,
+               {border: [true, false, true, false], bold: true, fontSize:14, text:this.totalValue(this.invoice.products.reduce((sum, p)=> sum + (p.qty * p.price), 0).toFixed(2))}],
               [{colSpan: 3,border: [true, true, true, true], text: 'Transport Mode : BY ROAD      |        Place of Supply : SAME'},'','', {border: [true, false, true, true], text:''} , {border: [true, false, true, true], text:''}]
 
             ]
@@ -165,15 +168,24 @@ export class AppComponent {
           style: 'sectionHeader'
         },
         {
-            type: 'none',
-            fontSize: 12,
+            fontSize: 10,
             ul: [
-              'Goods once sold cannot be taken back our reesponsibility ceases when goads leave',
-              'from our place. We are not / responsible for damage, pilferage during transit.',
+              'Goods once sold cannot be taken back our responsibility ceases when goods leave from our place.',
+              'We are not / responsible for damage, pilferage during transit.',
               'Goods return will be made within 10 dys from the date of purchase',
               'E & O.E.'
             ],
-        }
+        },
+        {
+          margin: [0, 10, 0, 0],
+          fontSize: 8 ,
+          text: 'This is Computer Generated Bill, hence Signature is not required',
+          italics: true
+          // columns: [
+          //   [{ text: 'This is Computer Generated Bill, hence Signature is not required', italics: true}],
+          //   // [{ text: 'gk', alignment: 'right', italics: true}],
+          // ]
+        },
       ],
       styles: {
         sectionHeader: {
