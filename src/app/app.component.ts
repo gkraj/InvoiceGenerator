@@ -211,6 +211,10 @@ export class AppComponent {
     this.invoice.products.push(new Product());
   }
 
+  removeProduct(){
+    this.invoice.products.pop();
+  }
+
   calcualteGST(value){
     return (9/100 *value).toFixed(2);
   }

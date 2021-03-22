@@ -100,8 +100,11 @@
         </div>
         <div class="card border-success mt-2">
           <div class="card-body">
-            <h4 class="card-title d-flex justify-content-between ">Order Details <button type="button"
-                class="btn btn-secondary" (click)="addProduct()">+</button></h4>
+            <div class="d-flex">
+              <div class=" card-title mr-auto p-2"><h4>Order Details</h4></div>
+              <div class="p-2"><button type="button" class="btn btn-secondary" (click)="addProduct()">+</button></div>
+              <div class="p-2" *ngIf="this.invoice.products.length > 1"><button type="button" class="btn btn-danger" (click)="removeProduct()">x</button></div>
+            </div>
             <div class="row">
               <table class="table">
                 <thead>
