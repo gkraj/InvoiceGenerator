@@ -129,15 +129,16 @@
                         [(ngModel)]="product.hsnCode" #ProductHsnCode="ngModel" required>
                     </td>
                     <td>
-                      <input type="number" class="form-control" name="price{{i}}" id="price"
-                        [ngClass]="{'is-invalid': invoiceForm.submitted && ProductPrice.invalid}"
-                        [(ngModel)]="product.price" #ProductPrice="ngModel" required>
-                    </td>
-                    <td>
                       <input type="number" class="form-control" name="quantity{{i}}" id="quantity"
                         [ngClass]="{'is-invalid': invoiceForm.submitted && ProductQty.invalid}"
                         [(ngModel)]="product.qty" #ProductQty="ngModel" required>
                     </td>
+                    <td>
+                      <input type="number" class="form-control" name="price{{i}}" id="price"
+                        [ngClass]="{'is-invalid': invoiceForm.submitted && ProductPrice.invalid}"
+                        [(ngModel)]="product.price" #ProductPrice="ngModel" required>
+                    </td>
+                    
                     <td>
                       {{product.price * product.qty || ''}}
                     </td>

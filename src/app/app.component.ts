@@ -67,7 +67,8 @@ export class AppComponent {
 
   lorryNumber = [
     {id:0, number: "TN 29 BS 2288"},
-    {id:1, number: "TN 29 CX 2288"}
+    {id:1, number: "TN 29 CX 2288"},
+    {id:2, number: "TN 29 CV 3888"}
   ]
 
   companyName = [
